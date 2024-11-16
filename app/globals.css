@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  font-family: "Noto Sans Arabic", "Noto Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+/* Custom Scrollbar Style */
+
+/* Custom Scrollbar Style */
+.BooleanModal-content::-webkit-scrollbar {
+  width: 8px; /* You can adjust the width */
+}
+
+.BooleanModal-content::-webkit-scrollbar-thumb {
+  background-color: #4a4a4a; /* Thumb color */
+  border-radius: 10px; /* Rounded corners */
+  border: 2px solid transparent; /* Optional border */
+  background-clip: content-box;
+}
+
+.BooleanModal-content::-webkit-scrollbar-thumb:hover {
+  background-color: #888; /* Hover effect for the thumb */
+}
+
+.BooleanModal-content::-webkit-scrollbar-track {
+  background-color: transparent; /* Invisible track */
+}
+
+.BooleanModal-content::-webkit-scrollbar-corner {
+  background-color: transparent; /* Optional: style the corner */
+}
+body::-webkit-scrollbar {
+  width: 10px; /* You can adjust the width */
+  padding: 4px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #4a4a4a; /* Thumb color */
+  border-radius: 10px; /* Rounded corners */
+  border: 2px solid transparent; /* Optional border */
+  background-clip: content-box;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background-color: #888; /* Hover effect for the thumb */
+}
+
+body::-webkit-scrollbar-track {
+  background-color: #222; /* Invisible track */
+}
+
+body::-webkit-scrollbar-corner {
+  background-color: #222; /* Invisible track */
+}
+.inputColor {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+.inputColor::-webkit-color-swatch {
+  border-radius: 5px;
+  border: none;
+}
+.inputColor::-moz-color-swatch {
+  border-radius: 5px;
+  border: none;
+}
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+input:focus,
+input:focus-within,
+input:active,
+textarea:focus,
+textarea:focus-within,
+textarea:active {
+  outline: none;
+}
