@@ -7,10 +7,6 @@ function CalendarChart({ habitData }) {
   const chartRef = useRef<HTMLDivElement>(null);
   const [startMonth, setStartMonth] = useState(subMonths(new Date(), 1)); // Start 1 month ago for display
 
-  // Handle empty state
-  if (!habitData.checkMarks || Object.keys(habitData.checkMarks).length === 0) {
-    return <div>No habits tracked yet.</div>;
-  }
   function isColorDark(hexColor) {
     // Convert hex color to RGB
     const r = parseInt(hexColor.slice(1, 3), 16);
@@ -149,7 +145,10 @@ function CalendarChart({ habitData }) {
   const handleToday = () => {
     setStartMonth(new Date());
   };
-
+  // Handle empty state
+  if (!habitData.checkMarks || Object.keys(habitData.checkMarks).length === 0) {
+    return <div>No habits tracked yet.</div>;
+  }
   return (
     <div className="relative border-b-2 border-borderColor pb-8">
       <nav className="p-4 lg:px-40 pb-0 text-textGray relative ">
