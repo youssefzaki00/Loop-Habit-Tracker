@@ -82,7 +82,7 @@ function HistoryChart({ habitData }) {
         myChart.dispose();
       };
     }
-  }, [weekHistory]);
+  }, [weekHistory, habitData.color]);
   return (
     <div
       ref={chartRef}

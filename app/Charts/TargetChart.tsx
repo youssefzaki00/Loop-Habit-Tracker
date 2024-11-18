@@ -103,7 +103,15 @@ function TargetChart({ habitData }) {
         myChart.dispose();
       };
     }
-  }, [habitData.color]);
+  }, [
+    habitData.color,
+    habitData.target,
+    monthPercent,
+    quarterPercent,
+    todayPercent,
+    weekPercent,
+    yearPercent,
+  ]);
 
   return (
     <div

@@ -13,7 +13,7 @@ function page() {
       <div className="fixed top-0 left-0 w-full bg-dark1 border-b border-gray-600 p-4 flex items-center justify-left gap-6 lg:px-40 z-10">
         {/* Left Arrow (Back) */}
         <Link href="/" passHref>
-          <BackButton />
+          <BackButton days={false} />
         </Link>
 
         {/* Page Title */}
