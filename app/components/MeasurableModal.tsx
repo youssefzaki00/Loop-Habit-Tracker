@@ -22,16 +22,11 @@ const MeasurableModal: React.FC<MeasurableModalProps> = ({
   // const [log, setLog] = useState<Number>(0);
   const { userUid } = useUser();
   const { habits, setHabits } = useHabits();
-
+  const [log, setLog] = useState(habitData.habitLogs[date] || 0);
   const handleLog = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const input = e.currentTarget.elements.namedItem(
-      "count"
-    ) as HTMLInputElement;
-    // setLog();
-    const log = Number(input.value);
+
     const checkCheckMark = () => {
-      console.log(habitData.targetType.toLowerCase().trim());
       if (habitData.targetType.toLowerCase().trim() == "at least") {
         if (habitData.target < log) {
           return { ...habitData.checkMarks, [date]: true };
@@ -93,7 +88,8 @@ const MeasurableModal: React.FC<MeasurableModalProps> = ({
             name="count"
             id="count"
             min={0}
-            defaultValue={0}
+            value={log}
+            onChange={(e) => setLog(Number(e.target.value))}
             className="bg-dark2 p-4 w-1/2 rounded-l-md border-r-2 border-dark5  active:outline-none focus:outline-none text-center"
           />
           <button
