@@ -84,6 +84,7 @@ const MeasurableModal: React.FC<MeasurableModalProps> = ({
 
         <form onSubmit={handleLog} className="flex items-center">
           <input
+            autoFocus
             type="number"
             name="count"
             id="count"

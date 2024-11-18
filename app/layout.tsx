@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-page-custom-font */
 import { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -5,6 +6,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { UserProvider } from "./context/userContext";
 import { AllHabitsProvider } from "./context/allHabitsContext";
+import { Suspense } from "react";
+import Loading from "./Loading/Loading";
 
 export const metadata: Metadata = {
   title: "Loop Habit Tracker",
@@ -42,9 +45,11 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <UserProvider>
-          <AllHabitsProvider>{children}</AllHabitsProvider>
-        </UserProvider>
+        <Suspense fallback={<Loading />}>
+          <UserProvider>
+            <AllHabitsProvider>{children}</AllHabitsProvider>
+          </UserProvider>
+        </Suspense>
         <ToastContainer />
       </body>
     </html>

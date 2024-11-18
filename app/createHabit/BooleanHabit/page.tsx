@@ -146,149 +146,144 @@ function Page() {
   }, []);
 
   return (
-    <Suspense>
-      <div className="min-h-screen bg-dark2">
-        {/* Fixed Header */}
-        <div className="fixed top-0 left-0 w-full bg-dark1 border-b border-gray-600 p-4 flex items-center justify-between lg:justify-around z-10">
-          <Link href="/" passHref>
-            <BackButton days={false} />
-          </Link>
+    <div className="min-h-screen bg-dark2">
+      {/* Fixed Header */}
+      <div className="fixed top-0 left-0 w-full bg-dark1 border-b border-gray-600 p-4 flex items-center justify-between lg:justify-around z-10">
+        <Link href="/" passHref>
+          <BackButton days={false} />
+        </Link>
 
-          <h3 className="text-xl sm:text-2xl font-semibold text-white">
-            Create habit
-          </h3>
+        <h3 className="text-xl sm:text-2xl font-semibold text-white">
+          Create habit
+        </h3>
 
-          <button
-            onClick={handleSubmit}
-            className="bg-black border uppercase text-white bg-primary-600 px-6 py-2 rounded focus:outline-none focus:ring-4 focus:ring-gray-600 hover:bg-primary-500 transition-all ease-in-out duration-200 w-fit"
-          >
-            Save
-          </button>
-        </div>
+        <button
+          onClick={handleSubmit}
+          className="bg-black border uppercase text-white bg-primary-600 px-6 py-2 rounded focus:outline-none focus:ring-4 focus:ring-gray-600 hover:bg-primary-500 transition-all ease-in-out duration-200 w-fit"
+        >
+          Save
+        </button>
+      </div>
 
-        {/* Page Content */}
-        <div className="py-24 px-4 lg:px-48">
-          <form className="space-y-6">
-            {/* Name */}
-            <div className="flex items-center gap-4 relative">
-              <div className="w-full ">
-                <label
-                  className={`block mb-2 text-sm font-medium text-white ${customlabel}`}
-                >
-                  Name
-                </label>
-                <input
-                  dir="auto"
-                  type="text"
-                  name="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="block w-full p-4 bg-dark2 text-white border border-gray-600 rounded-lg focus:ring-primary-600 focus:border-primary-600"
-                  placeholder="e.g. Exercise"
-                  required
-                />
-              </div>
-
-              {/* Color Selection Button */}
-              <div className="">
-                <div
-                  onClick={() => setIsColorPaletteVisible(true)}
-                  className="w-full  p-3 bg-dark2 text-white border border-gray-600 rounded-lg cursor-pointer flex justify-between items-center"
-                >
-                  <div
-                    style={{ backgroundColor: color }}
-                    className="w-8 h-8 rounded-full "
-                  ></div>
-                </div>
-              </div>
-            </div>
-
-            {/* Modal for Color Palette */}
-            {isColorPaletteVisible && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20">
-                <div
-                  ref={modalRef}
-                  className="bg-dark2 p-6 rounded-lg shadow-lg"
-                >
-                  <h3 className="text-xl text-white mb-4">Choose a Color</h3>
-                  <div className="grid grid-cols-5 gap-2">
-                    {colorPalette.map((paletteColor, index) => (
-                      <div
-                        key={index}
-                        onClick={() => {
-                          setColor(paletteColor);
-                          setIsColorPaletteVisible(false); // Close the modal after selecting a color
-                        }}
-                        className={`w-12 h-12 rounded-full cursor-pointer border-2 ${
-                          color === paletteColor
-                            ? "border-primary-600"
-                            : "border-transparent"
-                        }`}
-                        style={{ backgroundColor: paletteColor }}
-                      ></div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Question */}
-            <div className="relative">
+      {/* Page Content */}
+      <div className="py-24 px-4 lg:px-48">
+        <form className="space-y-6">
+          {/* Name */}
+          <div className="flex items-center gap-4 relative">
+            <div className="w-full ">
               <label
                 className={`block mb-2 text-sm font-medium text-white ${customlabel}`}
               >
-                Question
+                Name
               </label>
               <input
                 dir="auto"
                 type="text"
-                name="question"
-                value={question}
-                onChange={(e) => setQuestion(e.target.value)}
+                name="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 className="block w-full p-4 bg-dark2 text-white border border-gray-600 rounded-lg focus:ring-primary-600 focus:border-primary-600"
-                placeholder="e.g. Did you exercise today?"
+                placeholder="e.g. Exercise"
+                required
               />
             </div>
 
-            {/* Frequency */}
-            <div className="relative">
-              <label
-                className={`block mb-2 text-sm font-medium text-white ${customlabel}`}
+            {/* Color Selection Button */}
+            <div className="">
+              <div
+                onClick={() => setIsColorPaletteVisible(true)}
+                className="w-full  p-3 bg-dark2 text-white border border-gray-600 rounded-lg cursor-pointer flex justify-between items-center"
               >
-                Frequency
-              </label>
-              <select
-                name="frequency"
-                value={frequency}
-                onChange={(e) => setFrequency(e.target.value)}
-                className="block w-full p-4 bg-dark2 text-white border border-gray-600 rounded-lg focus:ring-primary-600 focus:border-primary-600"
-              >
-                <option>Every day</option>
-                <option>Every week</option>
-                <option>Every month</option>
-              </select>
+                <div
+                  style={{ backgroundColor: color }}
+                  className="w-8 h-8 rounded-full "
+                ></div>
+              </div>
             </div>
+          </div>
 
-            {/* Notes */}
-            <div className="relative">
-              <label
-                className={`block mb-2 text-sm font-medium text-white ${customlabel}`}
-              >
-                Notes
-              </label>
-              <textarea
-                dir="auto"
-                name="notes"
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                className="block w-full p-4 bg-dark2 text-white border border-gray-600 rounded-lg focus:ring-primary-600 focus:border-primary-600"
-                placeholder="(Optional)"
-              />
+          {/* Modal for Color Palette */}
+          {isColorPaletteVisible && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20">
+              <div ref={modalRef} className="bg-dark2 p-6 rounded-lg shadow-lg">
+                <h3 className="text-xl text-white mb-4">Choose a Color</h3>
+                <div className="grid grid-cols-5 gap-2">
+                  {colorPalette.map((paletteColor, index) => (
+                    <div
+                      key={index}
+                      onClick={() => {
+                        setColor(paletteColor);
+                        setIsColorPaletteVisible(false); // Close the modal after selecting a color
+                      }}
+                      className={`w-12 h-12 rounded-full cursor-pointer border-2 ${
+                        color === paletteColor
+                          ? "border-primary-600"
+                          : "border-transparent"
+                      }`}
+                      style={{ backgroundColor: paletteColor }}
+                    ></div>
+                  ))}
+                </div>
+              </div>
             </div>
-          </form>
-        </div>
+          )}
+
+          {/* Question */}
+          <div className="relative">
+            <label
+              className={`block mb-2 text-sm font-medium text-white ${customlabel}`}
+            >
+              Question
+            </label>
+            <input
+              dir="auto"
+              type="text"
+              name="question"
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              className="block w-full p-4 bg-dark2 text-white border border-gray-600 rounded-lg focus:ring-primary-600 focus:border-primary-600"
+              placeholder="e.g. Did you exercise today?"
+            />
+          </div>
+
+          {/* Frequency */}
+          <div className="relative">
+            <label
+              className={`block mb-2 text-sm font-medium text-white ${customlabel}`}
+            >
+              Frequency
+            </label>
+            <select
+              name="frequency"
+              value={frequency}
+              onChange={(e) => setFrequency(e.target.value)}
+              className="block w-full p-4 bg-dark2 text-white border border-gray-600 rounded-lg focus:ring-primary-600 focus:border-primary-600"
+            >
+              <option>Every day</option>
+              <option>Every week</option>
+              <option>Every month</option>
+            </select>
+          </div>
+
+          {/* Notes */}
+          <div className="relative">
+            <label
+              className={`block mb-2 text-sm font-medium text-white ${customlabel}`}
+            >
+              Notes
+            </label>
+            <textarea
+              dir="auto"
+              name="notes"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              className="block w-full p-4 bg-dark2 text-white border border-gray-600 rounded-lg focus:ring-primary-600 focus:border-primary-600"
+              placeholder="(Optional)"
+            />
+          </div>
+        </form>
       </div>
-    </Suspense>
+    </div>
   );
 }
 
