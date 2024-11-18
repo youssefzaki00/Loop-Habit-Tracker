@@ -68,7 +68,7 @@ function HabitHeader({ habitData }: HabitProps) {
     <header className="fixed left-0 w-full h-20 z-10 top-0 flex justify-between items-center bg-dark1 py-4 px-4 lg:px-40">
       <div className="flex items-center gap-6">
         <Link href="/">
-          <BackButton />
+          <BackButton days={false} />
         </Link>
         <h1
           dir="auto"
