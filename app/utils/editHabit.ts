@@ -17,7 +17,6 @@ async function editHabit(
     const updatedHabits = habits.map((habit) =>
       habit.id === habitId ? { id: habitId, ...editedHabit } : habit
     );
-    console.log(updatedHabits);
     setHabits(updatedHabits);
     toast.success("Habit successfully edited!");
   } catch (error) {

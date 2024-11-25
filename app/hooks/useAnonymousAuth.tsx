@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { signInAnonymouslyUser } from "../firebase/auth"; // Adjust import as needed
+import { signInAnonymouslyUser } from "../auth/auth"; // Adjust import as needed
 import { toast } from "react-toastify";
 
 export const useAnonymousAuth = () => {

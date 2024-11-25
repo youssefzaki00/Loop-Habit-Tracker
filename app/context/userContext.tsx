@@ -7,9 +7,9 @@ import React, {
   ReactNode,
 } from "react";
 import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
-import { signInAnonymouslyUser } from "../firebase/auth"; // Update the path as needed
 import { auth } from "../firebase/firebase";
 import { UserContextType } from "../interfaces";
+import { useRouter } from "next/navigation";
 
 // Define the shape of the context value
 
@@ -22,6 +22,7 @@ export const UserContext = createContext<UserContextType | undefined>(
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [userUid, setUserUid] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(
@@ -31,12 +32,8 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
           setUserUid(user.uid);
           setLoading(false);
         } else {
-          const userCredential = await signInAnonymouslyUser();
-          if (userCredential && userCredential.user) {
-            setUserUid(userCredential.user.uid);
-          } else {
-            console.error("User credential not received");
-          }
+          router.push("/auth/verify-email");
+
           setLoading(false);
         }
       }

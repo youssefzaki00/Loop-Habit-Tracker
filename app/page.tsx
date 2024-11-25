@@ -1,15 +1,17 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Header from "./components/Header";
 import DaysNavbar from "./habits/DaysNavbar";
 import HabitTrack from "./habits/HabitTrack";
 import Loading from "./Loading/Loading";
 import { useHabits } from "./hooks/useHabits";
 import { useUser } from "./context/userContext";
+import { useRouter } from "next/navigation";
 import { booleanHabit, measurableHabit } from "./interfaces";
 import ChooseModal from "./components/ChooseModal";
-
 const Home = () => {
+  const router = useRouter();
+
   const userContext = useUser();
   const { habits, loading } = useHabits();
   const [dayOffset, setDayOffset] = useState(0); // Shared offset for 10-day navigation
@@ -22,15 +24,18 @@ const Home = () => {
   const nextPeriod = () => {
     if (dayOffset < 0) setDayOffset((prev) => prev + 1);
   };
-
   const prevPeriod = () => setDayOffset((prev) => prev - 1);
   if (!userContext || userContext?.loading || loading) {
     return <Loading />;
+  } else if (!userContext.userUid) {
+    router.push("/auth/login");
   }
+  console.log(userContext);
 
+  const hasHabits = habits?.length > 0;
   return (
     <main className="min-h-screen bg-dark2">
-      {habits?.length > 0 ? (
+      {hasHabits ? (
         <>
           <Header />
           <DaysNavbar
@@ -38,14 +43,14 @@ const Home = () => {
             nextPeriod={nextPeriod}
             prevPeriod={prevPeriod}
           />
+          {habits.map((habit) => (
+            <HabitTrack
+              key={habit?.id}
+              habitData={habit}
+              dayOffset={dayOffset}
+            />
+          ))}
         </>
-      ) : (
-        ""
-      )}
-      {habits?.length > 0 ? (
-        habits?.map((habit: booleanHabit | measurableHabit) => (
-          <HabitTrack key={habit?.id} habitData={habit} dayOffset={dayOffset} />
-        ))
       ) : (
         <div className="flex flex-col items-center justify-center h-screen text-center gap-2 text-gray-600">
           <svg

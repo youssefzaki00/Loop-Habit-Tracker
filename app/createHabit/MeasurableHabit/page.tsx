@@ -2,7 +2,7 @@
 import BackButton from "@/app/components/BackButton";
 import { useUser } from "@/app/context/userContext";
 import Link from "next/link";
-import { Suspense, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { measurableHabit } from "@/app/interfaces";
