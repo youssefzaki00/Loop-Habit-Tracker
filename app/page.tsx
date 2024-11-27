@@ -30,7 +30,6 @@ const Home = () => {
   } else if (!userContext.userUid) {
     router.push("/auth/login");
   }
-  console.log(userContext);
 
   const hasHabits = habits?.length > 0;
   return (
