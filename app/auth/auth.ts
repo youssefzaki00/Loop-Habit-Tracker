@@ -4,6 +4,7 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
   signInWithEmailAndPassword,
+  signOut,
   updateProfile,
 } from "firebase/auth";
 import { useRouter } from "next/navigation";
@@ -94,4 +95,24 @@ export function useLoginWithEmail() {
   };
 
   return { user, error, isLoading, loginUser };
+}
+export function useSignout() {
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const router = useRouter(); // Optionally, use for redirection after login
+  const signOutUser = async () => {
+    setIsLoading(true);
+    signOut(auth)
+      .then(() => {
+        router.push("/auth/login");
+        toast.success("The Signout was successfull");
+      })
+      .catch((err) => {
+        setError(err);
+        toast.error("somthing wrong happend! please try again.");
+        console.error(err);
+      });
+    setIsLoading(false);
+  };
+  return { error, isLoading, signOutUser };
 }
