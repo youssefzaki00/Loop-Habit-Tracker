@@ -9,6 +9,7 @@ import { useUser } from "./context/userContext";
 import { useRouter } from "next/navigation";
 import { booleanHabit, measurableHabit } from "./interfaces";
 import ChooseModal from "./components/ChooseModal";
+import {auth} from "@/app/firebase/firebase";
 const Home = () => {
   const router = useRouter();
 
@@ -27,11 +28,14 @@ const Home = () => {
   const prevPeriod = () => setDayOffset((prev) => prev - 1);
   if (!userContext || userContext?.loading || loading) {
     return <Loading />;
-  } else if (!userContext.userUid) {
+  } else if (!userContext.userUid||userContext.userUid.length==0) {
     router.push("/auth/login");
   }
-
+if(!auth.currentUser.emailVerified){
+  router.push("/auth/login");
+}
   const hasHabits = habits?.length > 0;
+  if(auth.currentUser.emailVerified){
   return (
     <main className="min-h-screen bg-dark2">
       {hasHabits ? (
@@ -111,7 +115,9 @@ const Home = () => {
         </div>
       )}
     </main>
-  );
+  )}else{
+    router.push("/auth/login");
+  }
 };
 
 export default Home;

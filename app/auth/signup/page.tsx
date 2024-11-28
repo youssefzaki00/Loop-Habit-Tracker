@@ -3,6 +3,7 @@ import Link from "next/link";
 import "../formStyle.css";
 import { toast } from "react-toastify";
 import { useSignupWithEmail } from "../auth";
+import Loading from "@/app/Loading/Loading";
 function SignupPage() {
   const { user, error, isLoading, submitUserData } = useSignupWithEmail();
   const handleSubmit = (e) => {
@@ -18,6 +19,8 @@ function SignupPage() {
       submitUserData(name, email, password);
     }
   };
+  if (isLoading)return <Loading/>
+
   return (
     <div className="min-h-screen w-screen bg-dark2 flex items-center justify-center">
       <div className="form-container">

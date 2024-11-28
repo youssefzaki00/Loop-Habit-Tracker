@@ -2,6 +2,7 @@
 import Link from "next/link";
 import "../formStyle.css";
 import { useLoginWithEmail } from "../auth";
+import Loading from "@/app/Loading/Loading";
 function Login() {
   const { user, error, isLoading, loginUser } = useLoginWithEmail();
 
@@ -11,6 +12,7 @@ function Login() {
     const password = e.target.password?.value;
     loginUser(email, password);
   };
+  if (isLoading)return <Loading/>
   return (
     <div className="min-h-screen w-screen bg-dark2 flex items-center justify-center">
       <div className="form-container">
