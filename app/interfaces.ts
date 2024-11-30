@@ -1,4 +1,5 @@
 import { Timestamp } from "firebase/firestore";
+import { User as FirebaseUser } from "firebase/auth";
 
 // DaysNavbarProps - No changes needed as it's already correctly defined
 export interface DaysNavbarProps {
@@ -40,7 +41,7 @@ export interface measurableHabit {
 
 // User context type with userUid as a string or null, and loading as boolean
 export interface UserContextType {
-  userUid: string | null;
+  user: FirebaseUser | null; // Full user data or null if not authenticated
   loading: boolean;
 }
 

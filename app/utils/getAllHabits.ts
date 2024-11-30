@@ -6,7 +6,6 @@ async function getAllHabits(userUid: string) {
   // const docSnap = await getDoc(docRef);
   const habitsCollectionRef = collection(db, "users", userUid, "habits");
   const habitsSnap = await getDocs(habitsCollectionRef);
-  console.log("habitsSnap:", habitsSnap);
   if (!habitsSnap.empty) {
     const habits = habitsSnap.docs.map((doc) => ({
       id: doc.id,

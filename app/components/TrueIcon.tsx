@@ -1,10 +1,11 @@
 import React from "react";
 import { booleanHabit, HabitProps, measurableHabit } from "../interfaces";
-import { useUser } from "../context/userContext";
+import { useUser } from "../hooks/useUser";
 import { useHabits } from "../hooks/useHabits";
 import checkMark from "../utils/checkMark";
 import calculateHabitScore from "../utils/calculateScore";
 import generateHabitSummary from "../utils/generateHabitSummary";
+import Loading from "@/app/Loading/Loading";
 
 function TrueIcon({
   habitData,
@@ -13,7 +14,7 @@ function TrueIcon({
   habitData: booleanHabit | measurableHabit;
   date: string;
 }) {
-  const { userUid } = useUser();
+  const { user, loading } = useUser();
   const { habits, setHabits } = useHabits();
 
   const handleClick = () => {
@@ -30,8 +31,9 @@ function TrueIcon({
       habitScore: newScore,
       checkMarks: newCheckMarks,
     };
-    checkMark(userUid, habitData.id, habitChecked, habits, setHabits);
+    checkMark(user.uid, habitData.id, habitChecked, habits, setHabits);
   };
+
   return (
     <li
       className="flex justify-center items-center w-fit mx-auto relative z-20 customShadow"

@@ -1,57 +1,45 @@
 "use client";
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-} from "react";
+import React, { createContext, useState, useEffect, ReactNode } from "react";
 import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
 import { auth } from "../firebase/firebase";
-import { UserContextType } from "../interfaces";
+import { UserContextType } from "../interfaces"; // Ensure your interfaces reflect the full user data
 import { useRouter } from "next/navigation";
+import Loading from "@/app/Loading/Loading";
 
 // Define the shape of the context value
-
-// Create the context with the defined type
-export const UserContext = createContext<UserContextType | undefined>(
-  undefined
-);
+export const UserContext = createContext<UserContextType | undefined>(undefined);
 
 // Create the provider component
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [userUid, setUserUid] = useState<string | null>(null);
+  const [user, setUser] = useState<FirebaseUser | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(
-      auth,
-      async (user: FirebaseUser | null) => {
-        if (user) {
-          setUserUid(user.uid);
-          setLoading(false);
+    const unsubscribe = onAuthStateChanged(auth, async (user: FirebaseUser | null) => {
+      if (user) {
+        if (user.emailVerified) {
+          setUser(user); // Set the entire user object
         } else {
           router.push("/auth/verify-email");
-
-          setLoading(false);
         }
+        setLoading(false);
+      } else {
+        router.push("/auth/login");
+        setLoading(false);
       }
-    );
+    });
 
     return () => unsubscribe();
   }, []);
 
-  return (
-    <UserContext.Provider value={{ userUid, loading }}>
-      {children}
-    </UserContext.Provider>
-  );
-};
-export const useUser = (): UserContextType => {
-  const context = useContext(UserContext);
-  if (context === undefined) {
-    throw new Error("useUser must be used within a UserProvider");
+  if (loading) {
+    return <Loading/>; // Optionally, you can replace this with a loading spinner
   }
-  return context;
+
+  return (
+      <UserContext.Provider value={{ user, loading }}>
+        {children}
+      </UserContext.Provider>
+  );
 };

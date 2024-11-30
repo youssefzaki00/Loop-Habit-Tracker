@@ -1,6 +1,6 @@
 "use client";
 import BackButton from "@/app/components/BackButton";
-import { useUser } from "@/app/context/userContext";
+import { useUser } from "../../hooks/useUser";
 import Link from "next/link";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
@@ -12,7 +12,7 @@ import addHabit from "@/app/utils/addHabit";
 
 function Page() {
   const { habits, setHabits } = useHabits();
-  const { userUid } = useUser();
+  const { user,loading } = useUser();
   const [name, setName] = useState("");
   const [color, setColor] = useState("#3b82f6");
   const [frequency, setFrequency] = useState("Every day");
@@ -85,9 +85,9 @@ function Page() {
 
     try {
       if (isEditMode) {
-        editHabit(editHabitData, userUid, id, habits, setHabits);
+        editHabit(editHabitData, user.uid, id, habits, setHabits);
       } else {
-        addHabit(habitData, userUid, habits, setHabits);
+        addHabit(habitData, user.uid, habits, setHabits);
       }
       router.push("/");
     } catch (error) {

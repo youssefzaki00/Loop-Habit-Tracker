@@ -5,16 +5,15 @@ import DaysNavbar from "./habits/DaysNavbar";
 import HabitTrack from "./habits/HabitTrack";
 import Loading from "./Loading/Loading";
 import { useHabits } from "./hooks/useHabits";
-import { useUser } from "./context/userContext";
+import { useUser } from "./hooks/useUser";
 import { useRouter } from "next/navigation";
-import { booleanHabit, measurableHabit } from "./interfaces";
 import ChooseModal from "./components/ChooseModal";
 import {auth} from "@/app/firebase/firebase";
 const Home = () => {
   const router = useRouter();
 
-  const userContext = useUser();
-  const { habits, loading } = useHabits();
+  const { user, loading:userLoading } = useUser();
+  const { habits, loading:habitsLoading } = useHabits();
   const [dayOffset, setDayOffset] = useState(0); // Shared offset for 10-day navigation
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
@@ -26,9 +25,9 @@ const Home = () => {
     if (dayOffset < 0) setDayOffset((prev) => prev + 1);
   };
   const prevPeriod = () => setDayOffset((prev) => prev - 1);
-  if (!userContext || userContext?.loading || loading) {
+  if (!user || userLoading || habitsLoading) {
     return <Loading />;
-  } else if (!userContext.userUid||userContext.userUid.length==0) {
+  } else if (!user.uid||user.uid.length==0) {
     router.push("/auth/login");
   }
 if(!auth.currentUser.emailVerified){

@@ -1,9 +1,9 @@
 import { toast } from "react-toastify";
 import { auth } from "../firebase/firebase";
 import {
-  createUserWithEmailAndPassword,
+  createUserWithEmailAndPassword, GoogleAuthProvider,
   sendEmailVerification,
-  signInWithEmailAndPassword,
+  signInWithEmailAndPassword, signInWithPopup,
   signOut,
   updateProfile,
 } from "firebase/auth";
@@ -45,7 +45,6 @@ export function useSignupWithEmail() {
       // Show info toast to emphasize email verification
       toast.info(
         "Sign up successful! Please verify your email to complete registration.",
-        { autoClose: 10000 }
       );
 
       // Optionally, redirect to another page after signup
@@ -102,17 +101,43 @@ export function useSignout() {
   const router = useRouter(); // Optionally, use for redirection after login
   const signOutUser = async () => {
     setIsLoading(true);
-    signOut(auth)
-      .then(() => {
-        router.push("/auth/login");
-        toast.success("The Signout was successfull");
-      })
-      .catch((err) => {
-        setError(err);
-        toast.error("somthing wrong happend! please try again.");
-        console.error(err);
-      });
-    setIsLoading(false);
+    try {
+      await signOut(auth);
+      router.push("/auth/login");
+      toast.success("The signout was successful");
+    } catch (err) {
+      setError(err.message);
+      toast.error("Something went wrong! Please try again.");
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
   };
   return { error, isLoading, signOutUser };
 }
+export const useGoogleAuth = () => {
+  const [user, setUser] = useState(null);
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const provider = new GoogleAuthProvider();
+
+  const googleSignIn = async () => {
+    setIsLoading(true); // Set loading to true when the sign-in process starts
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      setUser(user);
+      toast.success("Logged in with Google successfully!");
+    } catch (error: any) {
+      const errorMessage = error.message;
+      setError(errorMessage);
+      toast.error(`Google Auth error: ${errorMessage}`);
+      console.error("Google Auth Error", error);
+    } finally {
+      setIsLoading(false); // Reset loading state after the sign-in process completes
+    }
+  };
+
+  return { user, error, isLoading, googleSignIn };
+};

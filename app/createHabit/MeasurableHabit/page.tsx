@@ -1,6 +1,6 @@
 "use client";
 import BackButton from "@/app/components/BackButton";
-import { useUser } from "@/app/context/userContext";
+import { useUser } from "../../hooks/useUser";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
@@ -13,7 +13,7 @@ import addHabit from "@/app/utils/addHabit";
 
 function Page() {
   const { habits, setHabits } = useHabits();
-  const { userUid } = useUser();
+  const { user,loading } = useUser();
   const [name, setName] = useState("");
   const [color, setColor] = useState("#3b82f6");
   const [frequency, setFrequency] = useState("Every day");
@@ -106,9 +106,9 @@ function Page() {
 
     try {
       if (isEditMode) {
-        await editHabit(editHabitData, userUid, id, habits, setHabits);
+        await editHabit(editHabitData, user.uid, id, habits, setHabits);
       } else {
-        addHabit(habitData, userUid, habits, setHabits);
+        addHabit(habitData, user.uid, habits, setHabits);
       }
       router.push("/");
     } catch (error) {
@@ -116,7 +116,7 @@ function Page() {
       toast.error("Something went wrong!❌❌");
     }
   };
-  const customlabel = "absolute -top-[10px] left-[10px] bg-dark2 px-4 py-[0px]";
+  const customLabel = "absolute -top-[10px] left-[10px] bg-dark2 px-4 py-[0px]";
   // Expanded color palette with 20 colors
   const colorPalette = [
     "#FF5733",
@@ -191,7 +191,7 @@ function Page() {
           <div className="flex items-center gap-4 relative">
             <div className="w-full ">
               <label
-                className={`block mb-2 text-sm font-medium text-white ${customlabel}`}
+                className={`block mb-2 text-sm font-medium text-white ${customLabel}`}
               >
                 Name
               </label>
@@ -257,7 +257,7 @@ function Page() {
           {/* Question */}
           <div className="relative">
             <label
-              className={`block mb-2 text-sm font-medium text-white ${customlabel}`}
+              className={`block mb-2 text-sm font-medium text-white ${customLabel}`}
             >
               Question
             </label>
@@ -275,7 +275,7 @@ function Page() {
           {/* Frequency */}
           <div className="relative">
             <label
-              className={`block mb-2 text-sm font-medium text-white ${customlabel}`}
+              className={`block mb-2 text-sm font-medium text-white ${customLabel}`}
             >
               Frequency
             </label>
@@ -294,7 +294,7 @@ function Page() {
           {/* Target */}
           <div className="relative">
             <label
-              className={`block mb-2 text-sm font-medium text-white ${customlabel}`}
+              className={`block mb-2 text-sm font-medium text-white ${customLabel}`}
             >
               Target
             </label>
@@ -312,7 +312,7 @@ function Page() {
           {/* Unit */}
           <div className="relative">
             <label
-              className={`block mb-2 text-sm font-medium text-white ${customlabel}`}
+              className={`block mb-2 text-sm font-medium text-white ${customLabel}`}
             >
               Unit
             </label>
@@ -331,7 +331,7 @@ function Page() {
           {/* Target Type */}
           <div className="relative">
             <label
-              className={`block mb-2 text-sm font-medium text-white ${customlabel}`}
+              className={`block mb-2 text-sm font-medium text-white ${customLabel}`}
             >
               Target Type
             </label>
@@ -349,7 +349,7 @@ function Page() {
           {/* Notes */}
           <div className="relative">
             <label
-              className={`block mb-2 text-sm font-medium text-white ${customlabel}`}
+              className={`block mb-2 text-sm font-medium text-white ${customLabel}`}
             >
               Notes
             </label>

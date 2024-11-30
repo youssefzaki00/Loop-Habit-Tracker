@@ -1,10 +1,11 @@
-import { useUser } from "../context/userContext";
+import { useUser } from "../hooks/useUser";
 import checkMark from "../utils/checkMark";
 import { booleanHabit, measurableHabit } from "../interfaces";
 import { useHabits } from "../hooks/useHabits";
 import calculateHabitScore from "../utils/calculateScore";
 import React from "react";
 import generateHabitSummary from "../utils/generateHabitSummary";
+import Loading from "@/app/Loading/Loading";
 
 interface FalseIconProps {
   habitData: booleanHabit | measurableHabit;
@@ -12,7 +13,7 @@ interface FalseIconProps {
 }
 
 function FalseIcon({ habitData, date }: FalseIconProps) {
-  const { userUid } = useUser();
+  const { user, loading } = useUser();
   const { habits, setHabits } = useHabits();
 
   const handleClick = async () => {
@@ -42,13 +43,12 @@ function FalseIcon({ habitData, date }: FalseIconProps) {
     };
 
     try {
-      await checkMark(userUid, habitData.id, habitChecked, habits, setHabits);
+      await checkMark(user.uid, habitData.id, habitChecked, habits, setHabits);
     } catch (error) {
       console.error("Error updating habit:", error);
       // Optionally show an error message to the user
     }
   };
-
   return (
     <li
       className="flex justify-center items-center w-fit mx-auto relative z-20 customShadow"

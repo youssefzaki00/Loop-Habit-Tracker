@@ -3,17 +3,17 @@ import Link from "next/link";
 import React from "react";
 import { HabitProps } from "../interfaces";
 import deleteHabit from "../utils/deleteHabit";
-import { useUser } from "../context/userContext";
+import { useUser } from "../hooks/useUser";
 import { useHabits } from "../hooks/useHabits";
 import { useRouter } from "next/navigation";
 
 function HabitHeader({ habitData }: HabitProps) {
-  const { userUid } = useUser();
+  const { user,loading } = useUser();
   const router = useRouter();
   const { habits, setHabits } = useHabits();
 
   const handleDelete = () => {
-    deleteHabit(userUid, habitData.id, habits, setHabits);
+    deleteHabit(user.uid, habitData.id, habits, setHabits);
     router.push("/");
   };
 
