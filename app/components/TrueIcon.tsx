@@ -1,6 +1,6 @@
 import React from "react";
 import { booleanHabit, HabitProps, measurableHabit } from "../interfaces";
-import { useUser } from "../hooks/useUser";
+import { useUser } from "../context/userContext";
 import { useHabits } from "../hooks/useHabits";
 import checkMark from "../utils/checkMark";
 import calculateHabitScore from "../utils/calculateScore";

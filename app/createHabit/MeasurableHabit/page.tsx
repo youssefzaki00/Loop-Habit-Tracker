@@ -1,6 +1,6 @@
 "use client";
 import BackButton from "@/app/components/BackButton";
-import { useUser } from "../../hooks/useUser";
+import { useUser } from "../../context/userContext";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
@@ -13,7 +13,7 @@ import addHabit from "@/app/utils/addHabit";
 
 function Page() {
   const { habits, setHabits } = useHabits();
-  const { user,loading } = useUser();
+  const { user, loading } = useUser();
   const [name, setName] = useState("");
   const [color, setColor] = useState("#3b82f6");
   const [frequency, setFrequency] = useState("Every day");

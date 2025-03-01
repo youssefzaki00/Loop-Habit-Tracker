@@ -1,8 +1,8 @@
 "use client";
 import React, { createContext, ReactNode, useEffect, useState } from "react";
 import getAllHabits from "../utils/getAllHabits";
-import { useUser } from "../hooks/useUser";
 import Loading from "@/app/Loading/Loading";
+import { useUser } from "./userContext";
 
 interface AllHabitsContextType {
   habits: any;
@@ -11,43 +11,42 @@ interface AllHabitsContextType {
 }
 
 export const AllHabitsContext = createContext<AllHabitsContextType | undefined>(
-    undefined
+  undefined
 );
 
 export const AllHabitsProvider = ({ children }: { children: ReactNode }) => {
   const [habits, setHabits] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const { user, loading: userLoading } = useUser();
 
   useEffect(() => {
     const fetchHabits = async () => {
       if (user) {
-        setIsLoading(true); // Start loading when fetching habits
+        setIsLoading(true);
         try {
-          const allHabits = await getAllHabits(user.uid); // Fetch user habits
-          setHabits(allHabits); // Set habits when successfully fetched
+          const allHabits = await getAllHabits(user.uid);
+          setHabits(allHabits);
         } catch (error) {
-          console.error("Error fetching habits:", error); // Log any errors
-          setHabits([]); // Set habits to an empty array on error, could be customized
+          console.error("Error fetching habits:", error);
+          setHabits([]);
         } finally {
-          setIsLoading(false); // Stop loading once the request finishes
+          setIsLoading(false);
         }
       }
     };
 
-    // Only fetch habits if the user is available (user is not null)
     if (user) {
       fetchHabits();
     }
+  }, [user]);
 
-  }, [user]); // Fetch habits whenever the user changes
-
-  // Show loading screen if either user or habits are loading
   if (isLoading || userLoading) return <Loading />;
 
   return (
-      <AllHabitsContext.Provider value={{ habits, setHabits, loading: isLoading }}>
-        {children}
-      </AllHabitsContext.Provider>
+    <AllHabitsContext.Provider
+      value={{ habits, setHabits, loading: isLoading }}
+    >
+      {children}
+    </AllHabitsContext.Provider>
   );
 };

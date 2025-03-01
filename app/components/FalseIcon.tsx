@@ -1,4 +1,4 @@
-import { useUser } from "../hooks/useUser";
+import { useUser } from "../context/userContext";
 import checkMark from "../utils/checkMark";
 import { booleanHabit, measurableHabit } from "../interfaces";
 import { useHabits } from "../hooks/useHabits";

@@ -20,8 +20,8 @@ function SignupPage() {
       submitUserData(name, email, password);
     }
   };
-  if (isLoading)return <Loading/>
 
+  if (isLoading) return <Loading />;
   return (
     <div className="min-h-screen w-screen bg-dark2 flex items-center justify-center">
       <div className="form-container">
@@ -54,10 +54,7 @@ function SignupPage() {
               </a>
             </div>
           </div>
-          <button
-            disabled={isLoading}
-            className="sign customShadow bg-main"
-          >
+          <button disabled={isLoading} className="sign customShadow bg-main">
             Sign up
           </button>
         </form>
@@ -67,7 +64,7 @@ function SignupPage() {
           <div className="line"></div>
         </div>
         <div className="social-icons mb-4">
-          <GoogleButton/>
+          <GoogleButton />
         </div>
         <p className="switch">
           Don&apos;t have an account?

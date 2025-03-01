@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useUser } from "../hooks/useUser";
+import { useUser } from "../context/userContext";
 import { useHabits } from "../hooks/useHabits";
 import logMeasurableHabit from "../utils/logMeasurableHabit";
 import { measurableHabit } from "../interfaces";
@@ -20,7 +20,7 @@ const MeasurableModal: React.FC<MeasurableModalProps> = ({
   habitData,
 }) => {
   // const [log, setLog] = useState<Number>(0);
-  const { user,loading } = useUser();
+  const { user, loading } = useUser();
   const { habits, setHabits } = useHabits();
   const [log, setLog] = useState(habitData.habitLogs[date] || 0);
   const handleLog = async (e: React.FormEvent<HTMLFormElement>) => {

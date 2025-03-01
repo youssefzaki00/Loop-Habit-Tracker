@@ -1,16 +1,43 @@
 import { toast } from "react-toastify";
-import { auth } from "../firebase/firebase";
+import { auth, db } from "../firebase/firebase";
 import {
-  createUserWithEmailAndPassword, GoogleAuthProvider,
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
   sendEmailVerification,
-  signInWithEmailAndPassword, signInWithPopup,
+  signInWithEmailAndPassword,
+  signInWithPopup,
   signOut,
   updateProfile,
 } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { addDoc, collection } from "firebase/firestore";
+import { useUser } from "../context/userContext";
+const addUserDataToDB = async (userId, userData, habits, setHabits) => {
+  if (!userId) {
+    toast.error("User ID is required.");
+    return;
+  }
+
+  try {
+    const userCollectionRef = collection(db, `users/${userId}/userData`);
+    const docRef = await addDoc(userCollectionRef, userData);
+
+    const newHabit = { ...userData, id: docRef.id };
+    setHabits((prevHabits) => [...prevHabits, newHabit]);
+
+    toast.success("Habit added successfully!");
+  } catch (error) {
+    console.error("Error adding user data:", error);
+    toast.error(`Error adding habit: ${error.message}`);
+  }
+};
+
+export default addUserDataToDB;
 
 export function useSignupWithEmail() {
+  const { user: userData, addUserDataToDB } = useUser();
+
   const [user, setUser] = useState(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -32,28 +59,17 @@ export function useSignupWithEmail() {
         password
       );
       const userData = userCredential.user;
-
-      // Set the user profile with the username (display name)
       await updateProfile(userData, { displayName: username });
-
-      // Send email verification
+      addUserDataToDB(userData.uid, userData);
       await sendEmailVerification(userData);
-
-      // Set user state
       setUser(userData);
-
-      // Show info toast to emphasize email verification
-      toast.info(
-        "Sign up successful! Please verify your email to complete registration.",
-      );
-
-      // Optionally, redirect to another page after signup
       router.push("/auth/verify-email"); // Or wherever you want the user to go after sign up
+      toast.info(
+        "Sign up successful! Please verify your email to complete registration."
+      );
     } catch (err) {
       console.error("Error during signup:", err);
       setError(err.message); // Set error message if any
-
-      // Show error toast
       toast.error("Sign up failed. Please try again.");
     } finally {
       setIsLoading(false); // Reset loading state

@@ -1,43 +1,39 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Header from "./components/Header";
 import DaysNavbar from "./habits/DaysNavbar";
 import HabitTrack from "./habits/HabitTrack";
 import Loading from "./Loading/Loading";
 import { useHabits } from "./hooks/useHabits";
-import { useUser } from "./hooks/useUser";
-import { useRouter } from "next/navigation";
 import ChooseModal from "./components/ChooseModal";
-import {auth} from "@/app/firebase/firebase";
+import { auth } from "@/app/firebase/firebase";
+import { useUser } from "./context/userContext";
+
 const Home = () => {
   const router = useRouter();
+  const { user, loading: userLoading } = useUser();
+  const { habits, loading: habitsLoading } = useHabits();
+  const [dayOffset, setDayOffset] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { user, loading:userLoading } = useUser();
-  const { habits, loading:habitsLoading } = useHabits();
-  const [dayOffset, setDayOffset] = useState(0); // Shared offset for 10-day navigation
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  useEffect(() => {
+    if (!user && !userLoading) {
+      router.replace("/auth/signup");
+    } else if (user && !auth.currentUser?.emailVerified) {
+      router.replace("/auth/login");
+    }
+  }, [user, userLoading]);
 
-  const toggleModal = () => {
-    setIsModalOpen(!isModalOpen);
-  };
+  if (userLoading || habitsLoading) return <Loading />;
 
-  const nextPeriod = () => {
-    if (dayOffset < 0) setDayOffset((prev) => prev + 1);
-  };
+  const toggleModal = () => setIsModalOpen(!isModalOpen);
+  const nextPeriod = () => dayOffset < 0 && setDayOffset((prev) => prev + 1);
   const prevPeriod = () => setDayOffset((prev) => prev - 1);
-  if (!user || userLoading || habitsLoading) {
-    return <Loading />;
-  } else if (!user.uid||user.uid.length==0) {
-    router.push("/auth/login");
-  }
-if(!auth.currentUser.emailVerified){
-  router.push("/auth/login");
-}
-  const hasHabits = habits?.length > 0;
-  if(auth.currentUser.emailVerified){
+
   return (
     <main className="min-h-screen bg-dark2">
-      {hasHabits ? (
+      {habits?.length > 0 ? (
         <>
           <Header />
           <DaysNavbar
@@ -45,9 +41,9 @@ if(!auth.currentUser.emailVerified){
             nextPeriod={nextPeriod}
             prevPeriod={prevPeriod}
           />
-          {habits.map((habit) => (
+          {habits.map((habit, index) => (
             <HabitTrack
-              key={habit?.id}
+              key={habit?.id || index}
               habitData={habit}
               dayOffset={dayOffset}
             />
@@ -55,6 +51,7 @@ if(!auth.currentUser.emailVerified){
         </>
       ) : (
         <div className="flex flex-col items-center justify-center h-screen text-center gap-2 text-gray-600">
+          {/* Restored SVG Illustration */}
           <svg
             width="80px"
             height="80px"
@@ -77,25 +74,20 @@ if(!auth.currentUser.emailVerified){
                 strokeWidth="0"
               />
             </g>
-
-            <g
-              id="SVGRepo_tracerCarrier"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              stroke="#CCCCCC"
-              strokeWidth="0.096"
-            />
-
             <g id="SVGRepo_iconCarrier">
-              <defs>
-                {/* <style>.c{fill:none;stroke:#1876d2;stroke-linecap:round;stroke-linejoin:round;}</style> */}
-              </defs>
-
-              <circle className="c" cx="24" cy="24" r="21.5" />
-
+              <circle
+                cx="24"
+                cy="24"
+                r="21.5"
+                stroke="#1876d2"
+                strokeWidth="2"
+                fill="none"
+              />
               <path
-                className="c"
                 d="m24.3718,29.8584c-1.1903,1.1903-3.05,1.1159-4.1659,0l-5.4306-5.4306c-.6695-.6695-1.711-.6695-2.3805,0l-.8927.8927c-.6695.6695-.6695,1.711,0,2.3805l5.505,5.505c1.1159,1.1159,2.9012,1.1159,4.0172,0l15.4736-15.4736c.6695-.6695.6695-1.711,0-2.3805l-.8927-.8927c-.6695-.6695-1.711-.6695-2.3805,0l-14.209,14.209"
+                stroke="#1876d2"
+                strokeWidth="2"
+                fill="none"
               />
             </g>
           </svg>
@@ -105,8 +97,8 @@ if(!auth.currentUser.emailVerified){
           </p>
 
           <button
-            className="px-6 py-2 text-white bg-main rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
-            onClick={toggleModal} // Toggle the modal on button click
+            className="px-6 py-2 text-white bg-main rounded-lg hover:bg-blue-600"
+            onClick={toggleModal}
           >
             Add Habit
           </button>
@@ -114,9 +106,7 @@ if(!auth.currentUser.emailVerified){
         </div>
       )}
     </main>
-  )}else{
-    router.push("/auth/login");
-  }
+  );
 };
 
 export default Home;

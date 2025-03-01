@@ -1,11 +1,34 @@
 "use client";
 import Link from "next/link";
 import "../formStyle.css";
-import {useGoogleAuth, useLoginWithEmail} from "../auth";
+import { useLoginWithEmail } from "../auth";
 import Loading from "@/app/Loading/Loading";
 import GoogleButton from "@/app/components/GoogleButton";
+import { useEffect, useState } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/app/firebase/firebase";
+import { useRouter } from "next/navigation";
+
 function Login() {
-  const { user, error, isLoading, loginUser } = useLoginWithEmail();
+  const { error, isLoading, loginUser } = useLoginWithEmail();
+  const [currentUser, setCurrentUser] = useState(null);
+  const [authChecked, setAuthChecked] = useState(false); // Track initial auth check
+  const router = useRouter();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      // Add email verification check here
+      if (user?.emailVerified) {
+        router.push("/");
+      }
+      setAuthChecked(true);
+    });
+    return () => unsubscribe();
+  }, [router]);
+
+  if (authChecked && auth.currentUser?.emailVerified) {
+    return null;
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -14,7 +37,8 @@ function Login() {
     loginUser(email, password);
   };
 
-  if (isLoading)return <Loading/>
+  if (!authChecked || isLoading) return <Loading />;
+
   return (
     <div className="min-h-screen w-screen bg-dark2 flex items-center justify-center">
       <div className="form-container">
@@ -27,6 +51,7 @@ function Login() {
               name="email"
               id="email"
               placeholder="example@gmail.com"
+              required
             />
           </div>
           <div className="input-group">
@@ -36,18 +61,18 @@ function Login() {
               name="password"
               id="password"
               placeholder="••••••••"
+              required
             />
             <div className="forgot">
-              <a rel="noopener noreferrer" href="#">
-                Forgot Password?
-              </a>
+              <Link href="/auth/forgot-password">Forgot Password?</Link>
             </div>
           </div>
           <button
+            type="submit"
             disabled={isLoading}
             className="sign customShadow"
           >
-            Login
+            {isLoading ? "Logging in..." : "Login"}
           </button>
         </form>
         <div className="social-message">
@@ -56,11 +81,11 @@ function Login() {
           <div className="line"></div>
         </div>
         <div className="social-icons mb-4">
-<GoogleButton/>
+          <GoogleButton />
         </div>
         <p className="switch">
           Don&apos;t have an account?
-          <Link rel="noopener noreferrer" href="/auth/signup" className="ml-1">
+          <Link href="/auth/signup" className="ml-1">
             Sign up
           </Link>
         </p>
