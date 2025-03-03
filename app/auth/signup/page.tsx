@@ -2,26 +2,43 @@
 import Link from "next/link";
 import "../formStyle.css";
 import { toast } from "react-toastify";
-import { useSignupWithEmail } from "../auth";
-import Loading from "@/app/Loading/Loading";
+import { useAuth } from "@/app/context/authContext";
 import GoogleButton from "@/app/components/GoogleButton";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useUser } from "@/app/context/userContext";
+
 function SignupPage() {
-  const { user, error, isLoading, submitUserData } = useSignupWithEmail();
-  const handleSubmit = (e) => {
+  const { login, loading } = useAuth();
+  const router = useRouter();
+  const { user, loading: userLoading } = useUser();
+
+  useEffect(() => {
+    if (!userLoading && user?.emailVerified) {
+      router.replace("/");
+    }
+  }, [user, userLoading, router]);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const name = e.target.name?.value;
-    const email = e.target.email?.value;
-    const password = e.target.password?.value;
+    const form = e.currentTarget;
+    const name = (form.elements.namedItem("name") as HTMLInputElement)?.value;
+    const email = (form.elements.namedItem("email") as HTMLInputElement)?.value;
+    const password = (form.elements.namedItem("password") as HTMLInputElement)
+      ?.value;
+
     if (!name || !email || !password) {
       toast.error("Please fill all fields");
-    } else if (String(password).length < 6) {
-      toast.error("Password must be at least 6 letters");
-    } else {
-      submitUserData(name, email, password);
+      return;
     }
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return;
+    }
+
+    login(name, email, password);
   };
 
-  if (isLoading) return <Loading />;
   return (
     <div className="min-h-screen w-screen bg-dark2 flex items-center justify-center">
       <div className="form-container">
@@ -34,7 +51,7 @@ function SignupPage() {
           <div className="input-group">
             <label htmlFor="email">Email</label>
             <input
-              type="text"
+              type="email"
               name="email"
               id="email"
               placeholder="example@gmail.com"
@@ -54,8 +71,11 @@ function SignupPage() {
               </a>
             </div>
           </div>
-          <button disabled={isLoading} className="sign customShadow bg-main">
-            Sign up
+          <button
+            disabled={loading || userLoading}
+            className="sign customShadow bg-main"
+          >
+            {loading || userLoading ? "Signing up..." : "Sign up"}
           </button>
         </form>
         <div className="social-message">
@@ -67,8 +87,8 @@ function SignupPage() {
           <GoogleButton />
         </div>
         <p className="switch">
-          Don&apos;t have an account?
-          <Link rel="noopener noreferrer" href="/auth/login" className="ml-1">
+          Already have an account?
+          <Link href="/auth/login" className="ml-1">
             Login
           </Link>
         </p>
@@ -76,4 +96,5 @@ function SignupPage() {
     </div>
   );
 }
+
 export default SignupPage;

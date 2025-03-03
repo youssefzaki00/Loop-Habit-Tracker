@@ -8,6 +8,7 @@ import { UserProvider } from "./context/userContext";
 import { AllHabitsProvider } from "./context/allHabitsContext";
 import { Suspense } from "react";
 import Loading from "./Loading/Loading";
+import { AuthProvider } from "./context/authContext";
 
 export const metadata: Metadata = {
   title: "Loop Habit Tracker",
@@ -30,26 +31,18 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@100..900&display=swap"
-          rel="stylesheet"
-        />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
           rel="stylesheet"
         />
       </head>
       <body>
-        <Suspense fallback={<Loading />}>
+        <AuthProvider>
           <UserProvider>
-            <AllHabitsProvider>{children}</AllHabitsProvider>
+            <AllHabitsProvider>
+              <Suspense fallback={<Loading />}>{children}</Suspense>
+            </AllHabitsProvider>
           </UserProvider>
-        </Suspense>
+        </AuthProvider>
         <ToastContainer />
       </body>
     </html>

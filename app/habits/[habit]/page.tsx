@@ -6,7 +6,7 @@ import HistoryChart from "@/app/Charts/HistoryChart";
 import Overview from "@/app/Charts/Overview";
 import ScoreChart from "@/app/Charts/ScoreChart";
 import TargetChart from "@/app/Charts/TargetChart";
-import { useHabits } from "@/app/hooks/useHabits";
+import { useHabits } from "@/app/context/allHabitsContext";
 import { booleanHabit, measurableHabit } from "@/app/interfaces";
 import Loading from "@/app/Loading/Loading";
 import { useEffect, useState } from "react";

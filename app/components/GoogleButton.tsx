@@ -1,11 +1,11 @@
-import { useGoogleAuth } from "@/app/auth/auth";
+import { useAuth } from "@/app/context/authContext";
 import { useRouter } from "next/navigation";
 
 function GoogleButton() {
   const router = useRouter(); // Optionally, use for redirection after login
-  const { user, error, isLoading, googleSignIn } = useGoogleAuth();
+  const { googleLogin } = useAuth();
   const handleGoogleAuth = () => {
-    googleSignIn().then(() => {
+    googleLogin().then(() => {
       router.push("/");
     });
   };

@@ -1,7 +1,7 @@
 import { useUser } from "../context/userContext";
 import checkMark from "../utils/checkMark";
 import { booleanHabit, measurableHabit } from "../interfaces";
-import { useHabits } from "../hooks/useHabits";
+import { useHabits } from "../context/allHabitsContext";
 import calculateHabitScore from "../utils/calculateScore";
 import React from "react";
 import generateHabitSummary from "../utils/generateHabitSummary";

@@ -4,7 +4,7 @@ import React from "react";
 import { HabitProps } from "../interfaces";
 import deleteHabit from "../utils/deleteHabit";
 import { useUser } from "../context/userContext";
-import { useHabits } from "../hooks/useHabits";
+import { useHabits } from "../context/allHabitsContext";
 import { useRouter } from "next/navigation";
 
 function HabitHeader({ habitData }: HabitProps) {

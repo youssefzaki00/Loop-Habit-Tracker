@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { measurableHabit } from "@/app/interfaces";
-import { useHabits } from "@/app/hooks/useHabits";
+import { useHabits } from "@/app/context/allHabitsContext";
 import editHabit from "@/app/utils/editHabit";
 import { useSearchParams } from "next/navigation";
 import addHabit from "@/app/utils/addHabit";

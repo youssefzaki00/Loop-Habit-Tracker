@@ -1,43 +1,46 @@
 "use client";
 import Link from "next/link";
 import "../formStyle.css";
-import { useLoginWithEmail } from "../auth";
-import Loading from "@/app/Loading/Loading";
+import { useAuth } from "@/app/context/authContext";
 import GoogleButton from "@/app/components/GoogleButton";
-import { useEffect, useState } from "react";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "@/app/firebase/firebase";
+import { useEffect } from "react";
+
 import { useRouter } from "next/navigation";
+import { useUser } from "@/app/context/userContext";
+import { toast } from "react-toastify";
 
 function Login() {
-  const { error, isLoading, loginUser } = useLoginWithEmail();
-  const [currentUser, setCurrentUser] = useState(null);
-  const [authChecked, setAuthChecked] = useState(false); // Track initial auth check
+  const { login, loading } = useAuth();
+  const { user, loading: userLoading } = useUser();
+
   const router = useRouter();
-
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      // Add email verification check here
-      if (user?.emailVerified) {
-        router.push("/");
-      }
-      setAuthChecked(true);
-    });
-    return () => unsubscribe();
-  }, [router]);
+    if (userLoading) return; // Prevents redirect while still loading
+    if (user?.emailVerified) {
+      router.replace("/");
+    }
+  }, [user, userLoading]);
 
-  if (authChecked && auth.currentUser?.emailVerified) {
-    return null;
-  }
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const email = e.target.email?.value;
-    const password = e.target.password?.value;
-    loginUser(email, password);
-  };
 
-  if (!authChecked || isLoading) return <Loading />;
+    const form = e.currentTarget;
+    const email = (form.elements.namedItem("email") as HTMLInputElement)?.value;
+    const password = (form.elements.namedItem("password") as HTMLInputElement)
+      ?.value;
+
+    if (!email || !password) {
+      toast.error("Please fill all fields");
+      return;
+    }
+
+    try {
+      await login(email, password);
+    } catch (error: any) {
+      console.error("Login error:", error);
+      toast.error(error?.message || "Failed to log in.");
+    }
+  };
 
   return (
     <div className="min-h-screen w-screen bg-dark2 flex items-center justify-center">
@@ -69,10 +72,10 @@ function Login() {
           </div>
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={loading || userLoading}
             className="sign customShadow"
           >
-            {isLoading ? "Logging in..." : "Login"}
+            {loading || userLoading ? "Logging in..." : "Login"}
           </button>
         </form>
         <div className="social-message">

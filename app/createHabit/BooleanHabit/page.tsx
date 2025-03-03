@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { useRouter, useSearchParams } from "next/navigation";
 import { booleanHabit } from "@/app/interfaces";
 import editHabit from "@/app/utils/editHabit";
-import { useHabits } from "@/app/hooks/useHabits";
+import { useHabits } from "@/app/context/allHabitsContext";
 import addHabit from "@/app/utils/addHabit";
 
 function Page() {

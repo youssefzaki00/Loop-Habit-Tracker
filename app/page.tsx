@@ -5,10 +5,9 @@ import Header from "./components/Header";
 import DaysNavbar from "./habits/DaysNavbar";
 import HabitTrack from "./habits/HabitTrack";
 import Loading from "./Loading/Loading";
-import { useHabits } from "./hooks/useHabits";
 import ChooseModal from "./components/ChooseModal";
-import { auth } from "@/app/firebase/firebase";
 import { useUser } from "./context/userContext";
+import { useHabits } from "./context/allHabitsContext";
 
 const Home = () => {
   const router = useRouter();
@@ -18,14 +17,17 @@ const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    if (!user && !userLoading) {
-      router.replace("/auth/signup");
-    } else if (user && !auth.currentUser?.emailVerified) {
-      router.replace("/auth/login");
+    if (!userLoading) {
+      if (!user) {
+        router.replace("/auth/login");
+      } else if (!user.emailVerified) {
+        router.replace("/auth/login");
+      }
     }
-  }, [user, userLoading]);
+  }, [user, userLoading, router]);
 
-  if (userLoading || habitsLoading) return <Loading />;
+  if (userLoading) return <Loading />;
+  if (!user || habitsLoading) return null; // Prevents flashing
 
   const toggleModal = () => setIsModalOpen(!isModalOpen);
   const nextPeriod = () => dayOffset < 0 && setDayOffset((prev) => prev + 1);
@@ -33,9 +35,9 @@ const Home = () => {
 
   return (
     <main className="min-h-screen bg-dark2">
+      <Header />
       {habits?.length > 0 ? (
         <>
-          <Header />
           <DaysNavbar
             dayOffset={dayOffset}
             nextPeriod={nextPeriod}
@@ -97,11 +99,17 @@ const Home = () => {
           </p>
 
           <button
-            className="px-6 py-2 text-white bg-main rounded-lg hover:bg-blue-600"
+            className={`px-6 py-2 text-white bg-main rounded-lg ${
+              habitsLoading
+                ? "opacity-50 cursor-not-allowed"
+                : "hover:bg-blue-600"
+            }`}
             onClick={toggleModal}
+            disabled={habitsLoading}
           >
             Add Habit
           </button>
+
           <ChooseModal isOpen={isModalOpen} closeModal={toggleModal} />
         </div>
       )}

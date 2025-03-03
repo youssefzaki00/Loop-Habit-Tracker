@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useUser } from "../context/userContext";
-import { useHabits } from "../hooks/useHabits";
+import { useHabits } from "../context/allHabitsContext";
 import logMeasurableHabit from "../utils/logMeasurableHabit";
 import { measurableHabit } from "../interfaces";
 import calculateHabitScore from "../utils/calculateScore";

@@ -1,12 +1,17 @@
 "use client";
-import React, { createContext, ReactNode, useEffect, useState } from "react";
+import React, {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import getAllHabits from "../utils/getAllHabits";
-import Loading from "@/app/Loading/Loading";
 import { useUser } from "./userContext";
 
 interface AllHabitsContextType {
-  habits: any;
-  setHabits: React.Dispatch<React.SetStateAction<any>>;
+  habits: any[];
+  setHabits: React.Dispatch<React.SetStateAction<any[]>>;
   loading: boolean;
 }
 
@@ -15,23 +20,23 @@ export const AllHabitsContext = createContext<AllHabitsContextType | undefined>(
 );
 
 export const AllHabitsProvider = ({ children }: { children: ReactNode }) => {
-  const [habits, setHabits] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [habits, setHabits] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const { user, loading: userLoading } = useUser();
 
   useEffect(() => {
     const fetchHabits = async () => {
-      if (user) {
-        setIsLoading(true);
-        try {
-          const allHabits = await getAllHabits(user.uid);
-          setHabits(allHabits);
-        } catch (error) {
-          console.error("Error fetching habits:", error);
-          setHabits([]);
-        } finally {
-          setIsLoading(false);
-        }
+      if (!user) return;
+
+      setLoading(true);
+      try {
+        const allHabits = await getAllHabits(user.uid);
+        setHabits(allHabits);
+      } catch (error) {
+        console.error("Error fetching habits:", error);
+        setHabits([]);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -40,13 +45,16 @@ export const AllHabitsProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [user]);
 
-  if (isLoading || userLoading) return <Loading />;
-
   return (
-    <AllHabitsContext.Provider
-      value={{ habits, setHabits, loading: isLoading }}
-    >
+    <AllHabitsContext.Provider value={{ habits, setHabits, loading }}>
       {children}
     </AllHabitsContext.Provider>
   );
+};
+export const useHabits = () => {
+  const context = useContext(AllHabitsContext);
+  if (context === undefined) {
+    throw new Error("useHabits must be used within a AllHabitsProvider");
+  }
+  return context;
 };

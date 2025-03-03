@@ -1,5 +1,4 @@
-import { useSignout } from "../auth/auth";
-import Loading from "../Loading/Loading";
+import { useAuth } from "@/app/context/authContext";
 
 interface ChooseModalProps {
   isOpen: boolean;
@@ -7,18 +6,16 @@ interface ChooseModalProps {
 }
 
 const SignoutModal: React.FC<ChooseModalProps> = ({ isOpen, closeModal }) => {
-  const { error, isLoading, signOutUser } = useSignout();
-  // Close modal on clicking outside of it
+  const { error, loading, logout } = useAuth();
   const handleClickOutside = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       closeModal();
     }
   };
-  const handleSignout = () => {
-    signOutUser();
+  const handleSignout = async () => {
+    await logout();
   };
   if (!isOpen) return null; // If modal is closed, render nothing
-  if (isLoading) return <Loading />;
   return (
     <div
       onClick={handleClickOutside}
@@ -35,7 +32,7 @@ const SignoutModal: React.FC<ChooseModalProps> = ({ isOpen, closeModal }) => {
         <span className="w-full h-[2px] bg-dark5"></span>
         <div className="flex items-center ">
           <button
-            disabled={isLoading}
+            disabled={loading}
             onClick={handleSignout}
             type="button"
             className="text-white w-full font-medium bg-dark2 p-4 active:outline-none focus:outline-none customShadow rounded-none active:scale-100 uppercase hover:bg-red-600 border-r-2 border-dark5"
