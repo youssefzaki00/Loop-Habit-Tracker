@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import * as echarts from "echarts";
 
-function OverviewChart({ habitData }) {
+function OverviewMini({ habitData }) {
   const chartRef = useRef<HTMLDivElement>(null);
   const totalChecks = habitData?.checkMarks
     ? Object.values(habitData.checkMarks).filter((check) => check === true)
@@ -68,4 +68,4 @@ function OverviewChart({ habitData }) {
   return <div ref={chartRef} className="w-8 h-8 col-span-1" />;
 }
 
-export default OverviewChart;
+export default OverviewMini;

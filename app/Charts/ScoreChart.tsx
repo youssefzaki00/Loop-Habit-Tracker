@@ -124,10 +124,19 @@ function ScoreChart({ habitData }) {
     }
   }, [habitData]);
   return (
-    <div
-      ref={chartRef}
-      className="p-4 lg:px-40 min-h-[24rem] w-full h-[24rem] flex items-center justify-center border-b-2 border-borderColor"
-    ></div>
+    <div className="">
+      {!habitData?.habitScore ||
+      Object.keys(habitData.habitScore).length === 0 ? (
+        <div className="p-4 lg:px-40 min-h-[24rem] w-full h-[24rem] flex items-center justify-center font-bold text-white text-lg lg:text-4xl border-b-2 border-borderColor">
+          No habit tracking data found. 📊❌
+        </div>
+      ) : (
+        <div
+          ref={chartRef}
+          className="p-4 lg:px-40 min-h-[24rem] w-full h-[24rem] flex items-center justify-center border-b-2 border-borderColor"
+        ></div>
+      )}
+    </div>
   );
 }
 export default ScoreChart;

@@ -5,7 +5,7 @@ import TrueIcon from "../components/TrueIcon";
 import Link from "next/link";
 import { HabitProps } from "../interfaces";
 import { getLastNDays } from "../utils/getLastDays";
-import OverviewChart from "../Charts/OverviewChart";
+import OverviewMini from "../Charts/OverviewMini";
 import MeasurableButton from "../components/MeasurableButton";
 
 function HabitTrack({
@@ -27,7 +27,7 @@ function HabitTrack({
         bg-blue- h-full w-full py-3 pr-10
         items-center grid grid-cols-5"
       >
-        <OverviewChart habitData={habitData} />
+        <OverviewMini habitData={habitData} />
         <h2
           style={{ color: habitData?.color }}
           dir="auto"

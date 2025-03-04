@@ -9,6 +9,8 @@ function StreaksChart({ habitData }) {
     const dates = Object.keys(checkMarks).map(
       (dateStr) => new Date(dateStr.split("-").reverse().join("-"))
     );
+    if (dates.length === 0) return []; // Handle case where no check marks exist
+
     const startDate = new Date(
       Math.min(...dates.map((date) => date.getTime()))
     );
@@ -76,6 +78,7 @@ function StreaksChart({ habitData }) {
         .toString()
         .padStart(2, "0")}/${streak.end.getFullYear()}`,
       value: streak.length,
+      display: `Streak: ${streak.length} days`, // Added display property
     }));
   };
 
@@ -83,7 +86,12 @@ function StreaksChart({ habitData }) {
 
   // Chart configuration options
   const getChartOptions = (
-    streaksData: Array<{ start: string; end: string; value: number }>
+    streaksData: Array<{
+      start: string;
+      end: string;
+      value: number;
+      display: string;
+    }>
   ) => ({
     title: {
       text: "Streaks",
@@ -99,12 +107,12 @@ function StreaksChart({ habitData }) {
       trigger: "item",
       formatter: (params) => {
         const streak = streaksData[params.dataIndex];
-        return `Streak: ${streak.value} days<br>Start: ${streak.start}<br>End: ${streak.end}`;
+        return `${streak.display}<br>Start: ${streak.start}<br>End: ${streak.end}`;
       },
     },
     grid: {
       left: "5%",
-      right: "15%",
+      right: "20%",
       bottom: "5%",
       top: "15%",
       containLabel: true,
@@ -136,7 +144,7 @@ function StreaksChart({ habitData }) {
           color: "#fff",
           formatter: (params) => {
             const streak = streaksData[params.dataIndex];
-            return streak.end;
+            return `${streak.display} (${streak.end})`;
           },
         },
       },
@@ -144,25 +152,29 @@ function StreaksChart({ habitData }) {
   });
 
   useEffect(() => {
-    if (chartRef.current) {
-      const myChart = echarts.init(chartRef.current);
-      myChart.setOption(
-        getChartOptions(
-          streaksData.splice(streaksData.length - 7, streaksData.length - 1)
-        )
-      );
+    if (!chartRef.current || streaksData.length === 0) return; // Prevent errors if ref is null or no data
 
-      return () => {
-        myChart.dispose();
-      };
-    }
+    const myChart = echarts.init(chartRef.current);
+    myChart.setOption(getChartOptions(streaksData.slice(-7))); // Use slice instead of splice
+
+    return () => {
+      myChart.dispose();
+    };
   }, [habitData.color, streaksData]);
 
   return (
-    <div
-      ref={chartRef}
-      className="p-4 lg:px-40 min-h-[24rem] w-full h-[24rem] flex items-center border-b-2 border-borderColor"
-    ></div>
+    <div className="">
+      {streaksData.length === 0 ? (
+        <div className="p-4 lg:px-40 min-h-[24rem] w-full h-[24rem] flex items-center justify-center font-bold text-white text-lg lg:text-4xl border-b-2 border-borderColor">
+          No streaks recorded yet. 🔥🚫
+        </div>
+      ) : (
+        <div
+          ref={chartRef}
+          className="p-4 lg:px-40 min-h-[24rem] w-full h-[24rem] flex items-center border-b-2 border-borderColor"
+        ></div>
+      )}
+    </div>
   );
 }
 
