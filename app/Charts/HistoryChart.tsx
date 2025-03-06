@@ -15,11 +15,11 @@ function HistoryChart({ habitData }) {
   }, [habitData]);
 
   useEffect(() => {
-    if (!chartRef.current || weekHistory.weeks.length === 0) return;
+    if (!chartRef?.current || weekHistory?.weeks?.length === 0) return;
 
-    const myChart = echarts.init(chartRef.current);
+    const myChart = echarts.init(chartRef?.current);
 
-    myChart.setOption({
+    myChart?.setOption({
       color: habitData.color,
       title: {
         text: "History",
@@ -84,7 +84,7 @@ function HistoryChart({ habitData }) {
 
   return (
     <div className="">
-      {weekHistory.weeks.length === 0 ? (
+      {weekHistory?.weeks?.length === 0 ? (
         <div className="p-4 lg:px-40 min-h-[24rem] w-full h-[24rem] flex items-center justify-center font-bold text-white text-lg lg:text-4xl border-b-2 border-borderColor">
           No history available. 📜❌
         </div>

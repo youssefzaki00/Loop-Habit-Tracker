@@ -11,7 +11,7 @@ function Overview({ habitData }) {
 
   // Get the last day and score only if habitScore exists
   const lastDay = habitData?.habitScore
-    ? (Object.keys(habitData.habitScore) as string[]).sort((a, b) => {
+    ? (Object.keys(habitData?.habitScore) as string[]).sort((a, b) => {
         const [dayA, monthA, yearA] = a
           .split("-")
           .map((part) => parseInt(part, 10));
@@ -25,12 +25,12 @@ function Overview({ habitData }) {
     : null;
 
   const lastScore = lastDay
-    ? Math.round(habitData.habitScore[lastDay] * 100) || 0
+    ? Math.round(habitData?.habitScore[lastDay] * 100) || 0
     : 0;
 
   useEffect(() => {
-    if (chartRef.current) {
-      const myChart = echarts.init(chartRef.current);
+    if (chartRef?.current) {
+      const myChart = echarts.init(chartRef?.current);
 
       const option = {
         color: habitData.color,
@@ -72,13 +72,13 @@ function Overview({ habitData }) {
     <div className="p-4 lg:px-40 flex gap-12 pt-12 text-lg font-medium text-textGray items-center justify-center relative border-b-2 border-borderColor">
       <p
         className="absolute left-40 top-4 text-2xl font-bold"
-        style={{ color: habitData.color }}
+        style={{ color: habitData?.color }}
       >
         Overview
       </p>
       <div ref={chartRef} className="w-16 h-16 col-span-1" />
       <div className="flex flex-col  col-span-1">
-        <p style={{ color: habitData.color }}>{lastScore}%</p>
+        <p style={{ color: habitData?.color }}>{lastScore}%</p>
         <p>Score</p>
       </div>
       {/* <div className="flex flex-col gap-1 col-span-1">
@@ -90,7 +90,7 @@ function Overview({ habitData }) {
         <p>Year</p>
       </div> */}
       <div className="flex flex-col  col-span-1">
-        <p style={{ color: habitData.color }}>{totalChecks}</p>
+        <p style={{ color: habitData?.color }}>{totalChecks}</p>
         <p>Total</p>
       </div>
     </div>

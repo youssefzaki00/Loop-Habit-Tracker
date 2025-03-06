@@ -18,7 +18,7 @@ function ScoreChart({ habitData }) {
     "Dec",
   ];
   useEffect(() => {
-    if (habitData && habitData.habitScore) {
+    if (habitData && habitData?.habitScore) {
       const scoreEntries = Object.entries(habitData.habitScore).map(
         ([dateStr, score]: [string, number]) => {
           const [day, month, year] = dateStr.split("-").map(Number);
@@ -31,7 +31,7 @@ function ScoreChart({ habitData }) {
           };
         }
       );
-      scoreEntries.sort((a, b) => a.date.getTime() - b.date.getTime());
+      scoreEntries?.sort((a, b) => a.date.getTime() - b.date.getTime());
 
       const dayLabels = scoreEntries.map(({ day, month, year }) => {
         return day === 1 ? `${monthNames[month - 1]}\n${year}` : `${day}`;
@@ -39,7 +39,7 @@ function ScoreChart({ habitData }) {
 
       const newScores = scoreEntries.map(({ score }) => score);
 
-      if (chartRef.current) {
+      if (chartRef?.current) {
         const myChart = echarts.init(chartRef.current);
 
         myChart.setOption({

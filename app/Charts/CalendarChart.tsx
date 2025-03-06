@@ -116,7 +116,8 @@ function CalendarChart({ habitData }) {
 
   return (
     <div className="relative border-b-2 border-borderColor pb-8">
-      {habitData.checkMarks && Object.keys(habitData.checkMarks).length > 0 ? (
+      {habitData?.checkMarks &&
+      Object.keys(habitData?.checkMarks).length > 0 ? (
         <>
           <nav className="p-4 lg:px-40 pb-0 text-textGray relative flex justify-between items-center">
             <div onClick={handlePrevMonth} className="cursor-pointer">

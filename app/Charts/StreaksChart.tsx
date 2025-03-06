@@ -7,7 +7,7 @@ function StreaksChart({ habitData }) {
   // Create a list of all days from the first check mark to today
   const getAllDays = (checkMarks: Record<string, number>) => {
     const dates = Object.keys(checkMarks).map(
-      (dateStr) => new Date(dateStr.split("-").reverse().join("-"))
+      (dateStr) => new Date(dateStr?.split("-").reverse().join("-"))
     );
     if (dates.length === 0) return []; // Handle case where no check marks exist
 
@@ -27,11 +27,11 @@ function StreaksChart({ habitData }) {
   };
 
   // Process check marks into a structured format
-  const allDays = getAllDays(habitData.checkMarks);
+  const allDays = getAllDays(habitData?.checkMarks);
   const checkEntries = allDays.map((dateStr) => ({
     date: new Date(dateStr.split("-").reverse().join("-")),
-    check: habitData.checkMarks[dateStr]
-      ? Boolean(habitData.checkMarks[dateStr])
+    check: habitData?.checkMarks[dateStr]
+      ? Boolean(habitData?.checkMarks[dateStr])
       : false,
   }));
 
@@ -47,7 +47,7 @@ function StreaksChart({ habitData }) {
         streakCount++;
       } else {
         if (streakCount > 0) {
-          streaks.push({
+          streaks?.push({
             length: streakCount,
             start: checkEntries[i - streakCount].date,
             end: checkEntries[i - 1].date,
@@ -59,7 +59,7 @@ function StreaksChart({ habitData }) {
 
     // Handle the case where streak ends at the last entry
     if (streakCount > 0) {
-      streaks.push({
+      streaks?.push({
         length: streakCount,
         start: checkEntries[checkEntries.length - streakCount].date,
         end: checkEntries[checkEntries.length - 1].date,
@@ -106,8 +106,8 @@ function StreaksChart({ habitData }) {
     tooltip: {
       trigger: "item",
       formatter: (params) => {
-        const streak = streaksData[params.dataIndex];
-        return `${streak.display}<br>Start: ${streak.start}<br>End: ${streak.end}`;
+        const streak = streaksData[params?.dataIndex];
+        return `${streak?.display}<br>Start: ${streak?.start}<br>End: ${streak?.end}`;
       },
     },
     grid: {
@@ -164,7 +164,7 @@ function StreaksChart({ habitData }) {
 
   return (
     <div className="">
-      {streaksData.length === 0 ? (
+      {streaksData?.length === 0 ? (
         <div className="p-4 lg:px-40 min-h-[24rem] w-full h-[24rem] flex items-center justify-center font-bold text-white text-lg lg:text-4xl border-b-2 border-borderColor">
           No streaks recorded yet. 🔥🚫
         </div>
