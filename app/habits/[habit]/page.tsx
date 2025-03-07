@@ -13,23 +13,29 @@ import { useEffect, useState } from "react";
 import StreaksChart from "../../Charts/StreaksChart";
 
 interface PageProps {
-  params: { habit: string };
+  params: Promise<{ habit: string }>;
 }
 
 const Page = ({ params }: PageProps) => {
+  const [habitParam, setHabitParam] = useState<string | null>(null);
+
+  useEffect(() => {
+    params.then((resolvedParams) => setHabitParam(resolvedParams.habit));
+  }, [params]);
+
   const { habits, loading } = useHabits();
   const [habitData, setHabitData] = useState<
     booleanHabit | measurableHabit | null
   >(null);
 
   useEffect(() => {
-    if (!loading) {
-      const temp = habits.find((e: any) => e.id === params.habit);
+    if (!loading && habitParam) {
+      const temp = habits.find((e: any) => e.id === habitParam);
       setHabitData(temp || null);
     }
-  }, [habits, loading, params.habit]);
+  }, [habits, loading, habitParam]);
 
-  if (loading || !habitData) {
+  if (loading || !habitData || !habitParam) {
     return <Loading />;
   }
 
